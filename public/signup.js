@@ -16,7 +16,7 @@ async function addUser(event) {
             password: password.value
         }
         try {
-            const response = await axios.post('http://localhost:3000/user/signup', user)
+            const response = await axios.post('http://localhost:3000/user/signup', user);
             if (response.status === 201) {
                 showNotification(response.data.message);
             } else {
@@ -35,7 +35,7 @@ async function addUser(event) {
 function showNotification(message) {
     const notificationDiv = document.createElement('div');
     notificationDiv.classList.add('notification');
-    notificationDiv.innerHTML = `${message}`
+    notificationDiv.innerHTML = `${message}`;
     document.body.appendChild(notificationDiv);
     setTimeout(() => {
         document.body.removeChild(notificationDiv);
