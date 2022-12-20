@@ -9,12 +9,31 @@ exports.postAddUser = async (req, res, next) => {
             if (user) {
                 res.status(403).json({ success: false, message: 'A user with this email already exists.' })
             } else {
-                const newUser = await User.create({
+                await User.create({
                     name: req.body.username,
                     email: req.body.email,
                     password: req.body.password
                 });
                 res.status(201).json({ success: true, message: 'Congratulations! You successfully signed up.' });
+            }
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Database operation failed. Please try again.' });
+    }
+};
+
+exports.postLoginUser = async (req, res, next) => {
+    const emailEntered = req.body.email;
+    try {
+        const user = await User.findOne({ where: { email: emailEntered } });
+        if (!user) {
+            res.status(404).json({ success: false, message: 'User does not exist. Please enter registered email.' });
+        } else {
+            const passwordEntered = req.body.password;
+            if (passwordEntered !== user.password) {
+                res.status(401).json({ success: false, message: 'Incorrect Password.' });
+            } else {
+                res.status(201).json({ success: true, message: 'Logged in successfully.' });
             }
         }
     } catch (error) {

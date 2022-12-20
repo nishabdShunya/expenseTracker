@@ -94,6 +94,10 @@ form input:focus {
     outline: none;
 }
 
+input {
+    caret-color : rgb(82, 214, 150);
+}
+
 input:-webkit-autofill {
     transition: background-color 60000s ease-in-out 0s;
     -webkit-text-fill-color: white !important;

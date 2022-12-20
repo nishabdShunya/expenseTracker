@@ -1,23 +1,21 @@
-const username = document.getElementById('username');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
-const signupBtn = document.getElementById('signup-btn');
+const loginBtn = document.getElementById('login-btn');
 
-signupBtn.addEventListener('click', addUser);
+loginBtn.addEventListener('click', loginUser);
 
-async function addUser(event) {
+async function loginUser(event) {
     event.preventDefault();
-    if (username.value === '' || email.value === '' || password.value === '') {
-        alert('Please enter all the fields');
+    if (email.value === '' || password.value === '') {
+        alert('Please enter all the fields.');
     } else {
-        const user = {
-            username: username.value,
+        const loginDetails = {
             email: email.value,
             password: password.value
         }
         try {
-            const response = await axios.post('http://localhost:3000/user/signup', user);
-            if (response.status === 201) {
+            const response = await axios.post('http://localhost:3000/user/login', loginDetails);
+            if (response.status === 201 || response.status === 401) {
                 showNotification(response.data.message);
             } else {
                 throw new Error('Something went wrong. Please try again.');
@@ -26,7 +24,6 @@ async function addUser(event) {
             showNotification(error.response.data.message);
         }
         // Clearing the fields
-        username.value = '';
         email.value = '';
         password.value = '';
     }

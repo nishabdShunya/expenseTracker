@@ -8,15 +8,14 @@ const app = express();
 
 // Importing my exports
 const sequelize = require('./util/database');
-const signupRoutes = require('./routes/signup');
-const User = require('./models/user');
+const userRoutes = require('./routes/userRoutes');
 
 // Using body-parser and cors for the app
 app.use(bodyParser.json());
 app.use(cors());
 
 // Routes
-app.use('/user', signupRoutes);
+app.use('/user', userRoutes);
 
 sequelize.sync()
     .then(app.listen(3000))
