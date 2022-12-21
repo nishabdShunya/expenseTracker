@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
 exports.postAddUser = async (req, res, next) => {
@@ -9,12 +10,14 @@ exports.postAddUser = async (req, res, next) => {
             if (user) {
                 res.status(403).json({ success: false, message: 'A user with this email already exists.' })
             } else {
-                await User.create({
-                    name: req.body.username,
-                    email: req.body.email,
-                    password: req.body.password
-                });
-                res.status(201).json({ success: true, message: 'Congratulations! You successfully signed up.' });
+                bcrypt.hash(req.body.password, 10, async (err, hash) => {
+                    await User.create({
+                        name: req.body.username,
+                        email: req.body.email,
+                        password: hash
+                    });
+                    res.status(201).json({ success: true, message: 'Congratulations! You successfully signed up.' });
+                })
             }
         }
     } catch (error) {
@@ -23,17 +26,23 @@ exports.postAddUser = async (req, res, next) => {
 };
 
 exports.postLoginUser = async (req, res, next) => {
-    const emailEntered = req.body.email;
     try {
-        const user = await User.findOne({ where: { email: emailEntered } });
-        if (!user) {
-            res.status(404).json({ success: false, message: 'User does not exist. Please enter registered email.' });
+        if (req.body.email === '' || req.body.password === '') {
+            res.status(400).json({ success: false, message: 'Invalid Request' });
         } else {
-            const passwordEntered = req.body.password;
-            if (passwordEntered !== user.password) {
-                res.status(401).json({ success: false, message: 'Incorrect Password.' });
+            const emailEntered = req.body.email;
+            const user = await User.findOne({ where: { email: emailEntered } });
+            if (!user) {
+                res.status(404).json({ success: false, message: 'User does not exist. Please enter registered email.' });
             } else {
-                res.status(201).json({ success: true, message: 'Logged in successfully.' });
+                const passwordEntered = req.body.password;
+                bcrypt.compare(passwordEntered, user.password, (err, result) => {
+                    if (!result) {
+                        res.status(401).json({ success: false, message: 'Incorrect Password.' });
+                    } else {
+                        res.status(201).json({ success: true, message: 'Logged in successfully.' });
+                    }
+                });
             }
         }
     } catch (error) {
