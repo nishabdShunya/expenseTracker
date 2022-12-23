@@ -81,7 +81,7 @@ form {
     align-items: stretch;
 }
 
-form input {
+form input{
     margin-bottom: 2rem;
     padding: 0.5rem;
     height: 4rem;
@@ -95,7 +95,7 @@ form input:focus {
 }
 
 input {
-    caret-color : rgb(82, 214, 150);
+    caret-color: rgb(82, 214, 150);
 }
 
 input:-webkit-autofill {

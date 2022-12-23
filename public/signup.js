@@ -19,6 +19,9 @@ async function addUser(event) {
             const response = await axios.post('http://localhost:3000/user/signup', user);
             if (response.status === 201) {
                 showNotification(response.data.message);
+                setTimeout(() => {
+                    window.location.href = './login.html';
+                }, 2500);
             } else {
                 throw new Error('Something went wrong. Please try again.');
             }

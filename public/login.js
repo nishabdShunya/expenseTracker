@@ -15,7 +15,12 @@ async function loginUser(event) {
         }
         try {
             const response = await axios.post('http://localhost:3000/user/login', loginDetails);
-            if (response.status === 201 || response.status === 401) {
+            if (response.status === 201) {
+                showNotification(response.data.message);
+                setTimeout(() => {
+                    window.location.href = './expenses.html';
+                }, 2500);
+            } else if (response.status === 401) {
                 showNotification(response.data.message);
             } else {
                 throw new Error('Something went wrong. Please try again.');

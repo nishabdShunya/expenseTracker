@@ -1,0 +1,101 @@
+#expense-page-main {
+    padding: 0;
+    top: 0;
+    bottom: 0;
+}
+
+#expense-page-main h1 {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.form-container {
+    flex: 1;
+    justify-content: flex-start;
+}
+
+#expense-list {
+    flex: 5;
+    background-color: rgb(44, 44, 44);
+    list-style-type: none;
+    margin: 0;
+    padding: 1rem 2rem;
+    width: 100%;
+    font-size: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow-y: scroll;
+}
+
+.expense-item {
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+    border: none;
+    background-color: rgb(35, 35, 35);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.del-btns {
+    border: 0.1rem solid white;
+    color: white;
+    background-color: rgb(35, 35, 35);
+    padding: 0.5rem;
+}
+
+.del-btns:hover {
+    cursor: pointer;
+    background-color: rgb(255, 0, 0, 0.5);
+}
+
+.del-btns:focus {
+    outline: none;
+    background-color: rgb(255, 0, 0, 0.5);
+}
+
+#expense-form {
+    width: 100%;
+    padding: 0 2rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#expense-form label {
+    display: none;
+}
+
+#expense-form input,
+#expense-form select {
+    width: 20%;
+    height: 4rem;
+    margin: 0;
+    padding: 0.5rem;
+    color: white;
+    background-color: rgb(44, 44, 44);
+    border: none;
+}
+
+#expense-form input:focus {
+    outline: none;
+}
+
+#expense-form select:hover {
+    cursor: pointer;
+}
+
+#expense-form button {
+    width: 20%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

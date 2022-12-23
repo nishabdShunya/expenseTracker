@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="forms.css">
+    <link rel="stylesheet" href="expenses.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
+</head>
+
+<body>
+    <main id="expense-page-main">
+        <h1>EXPENSES</h1>
+        <div class="form-container">
+            <form id="expense-form">
+                <label for="amount"></label>
+                <input type="number" name="amount" id="amount" placeholder="How much you spent?" required>
+                <label for="description"></label>
+                <input type="text" name="description" id="description" placeholder="What did you spent on?" required>
+                <label for="category"></label>
+                <select id="category" required>
+                    <option disabled selected>Expense Category</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Groceries">Groceries</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Miscellaneous">Miscellaneous</option>
+                </select>
+                <button id="add-expense-btn" type="submit">ADD EXPENSE</button>
+            </form>
+        </div>
+        <ul id="expense-list"></ul>
+    </main>
+</body>
+<script src="expenses.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+
+</html>
