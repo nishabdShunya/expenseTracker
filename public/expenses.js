@@ -22,13 +22,20 @@ async function addExpense(event) {
             description: description.value,
             category: category.value
         }
-        const response = await axios.post('http://localhost:3000/expenses/add-expense', expenseDetails);
-        showNotification(response.data.message);
-        showExpenses();
+        try {
+            const response = await axios.post('http://localhost:3000/expenses/add-expense', {
+                expenseDetails: expenseDetails,
+                headers: { 'Authorization': localStorage.getItem('token') }
+            });
+            showNotification(response.data.message);
+            showExpenses();
+        } catch (error) {
+            showNotification(error);
+        }
         // Clearing the fields
         amount.value = '';
         description.value = '';
-        category.value = '';
+        category.value = 'Expense Category';
     }
 }
 
@@ -44,20 +51,32 @@ function showNotification(message) {
 
 async function showExpenses() {
     expenseList.innerHTML = '';
-    const response = await axios.get('http://localhost:3000/expenses');
-    const expenses = response.data.expenses;
-    for (let expense of expenses) {
-        const expenseItem = `
-        <li class="expense-item">
-            &#x20B9; ${expense.amount} spent on ${expense.category} (${expense.description}).
-            <button class="del-btns" onClick = "deleteExpenseItem('${expense.id}')">DELETE</button>
-        </li>`;
-        expenseList.innerHTML += expenseItem;
+    try {
+        const response = await axios.get('http://localhost:3000/expenses', {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        });
+        const expenses = response.data.expenses;
+        for (let expense of expenses) {
+            const expenseItem = `
+            <li class="expense-item">
+                &#x20B9; ${expense.amount} spent on ${expense.category} (${expense.description}).
+                <button class="del-btns" onClick = "deleteExpenseItem('${expense.id}')">DELETE</button>
+            </li>`;
+            expenseList.innerHTML += expenseItem;
+        }
+    } catch (error) {
+        showNotification(error.response.data.message);
     }
 };
 
 async function deleteExpenseItem(expenseId) {
-    const response = await axios.delete('http://localhost:3000/expenses/' + expenseId);
-    showNotification(response.data.message);
-    showExpenses();
+    try {
+        const response = await axios.delete('http://localhost:3000/expenses/' + expenseId, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        });
+        showNotification(response.data.message);
+        showExpenses();
+    } catch (error) {
+        showNotification(error);
+    }
 };

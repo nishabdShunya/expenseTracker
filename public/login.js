@@ -16,6 +16,7 @@ async function loginUser(event) {
         try {
             const response = await axios.post('http://localhost:3000/user/login', loginDetails);
             if (response.status === 201) {
+                localStorage.setItem('token', response.data.token);
                 showNotification(response.data.message);
                 setTimeout(() => {
                     window.location.href = './expenses.html';
