@@ -11,6 +11,7 @@ const sequelize = require('./util/database');
 const userRoutes = require('./routes/userRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
+const premiumRoutes = require('./routes/premiumRoutes');
 const User = require('./models/user');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
@@ -23,6 +24,7 @@ app.use(cors());
 app.use('/user', userRoutes);
 app.use('/expenses', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
+app.use('/premium', premiumRoutes);
 
 // Associations
 Expense.belongsTo(User);

@@ -28,14 +28,19 @@ exports.getPremium = async (req, res, next) => {
 
 exports.updateTransaction = async (req, res, next) => {
     try {
-        const order = await Order.findOne({ where: { orderId: req.body.order_id } });
-        const promise1 = await order.update({ paymentId: req.body.payment_id, status: 'SUCCESSFUL' });
-        const promise2 = await req.user.update({ isPremiumUser: true });
-        await Promise.all([promise1, promise2]);
-        // .then(result => {
-        res.status(202).json({ success: true, message: 'Transaction Successful.' });
-        // })
-        // .catch(err => console.log(err))
+        if (req.body.success) {
+            const order = await Order.findOne({ where: { orderId: req.body.order_id } });
+            const promise1 = await order.update({ paymentId: req.body.payment_id, status: 'SUCCESSFUL' });
+            const promise2 = await req.user.update({ isPremiumUser: true });
+            await Promise.all([promise1, promise2]);
+            res.status(201).json({ success: true, message: 'Transaction Successful.' });
+        } else {
+            const order = await Order.findOne({ where: { orderId: req.body.order_id } });
+            const promise1 = await order.update({ paymentId: req.body.payment_id, status: 'FAILED' });
+            const promise2 = await req.user.update({ isPremiumUser: false });
+            await Promise.all([promise1, promise2])
+            res.status(201).json({ success: false, message: 'Transaction Failed.' });
+        }
     } catch (error) {
         res.status(500).json({ success: false, message: 'Database operation failed. Please try again.' });
     }
