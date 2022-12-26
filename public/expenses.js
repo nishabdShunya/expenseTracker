@@ -3,6 +3,9 @@ const description = document.getElementById('description');
 const category = document.getElementById('category');
 const addExpenseBtn = document.getElementById('add-expense-btn');
 const expenseList = document.getElementById('expense-list');
+const user = document.getElementById('user');
+const username = document.getElementById('user-name');
+const buyPremiumBtn = document.getElementById('buy-premium-btn');
 
 window.addEventListener('DOMContentLoaded', (event) => {
     event.preventDefault();
@@ -23,8 +26,7 @@ async function addExpense(event) {
             category: category.value
         }
         try {
-            const response = await axios.post('http://localhost:3000/expenses/add-expense', {
-                expenseDetails: expenseDetails,
+            const response = await axios.post('http://localhost:3000/expenses/add-expense', expenseDetails, {
                 headers: { 'Authorization': localStorage.getItem('token') }
             });
             showNotification(response.data.message);
@@ -55,6 +57,10 @@ async function showExpenses() {
         const response = await axios.get('http://localhost:3000/expenses', {
             headers: { 'Authorization': localStorage.getItem('token') }
         });
+        username.innerText = response.data.user.name;
+        if (response.data.user.isPremiumUser) {
+            makePremium();
+        }
         const expenses = response.data.expenses;
         for (let expense of expenses) {
             const expenseItem = `
@@ -80,3 +86,36 @@ async function deleteExpenseItem(expenseId) {
         showNotification(error);
     }
 };
+
+buyPremiumBtn.addEventListener('click', order);
+
+async function order(event) {
+    const response = await axios.get('http://localhost:3000/purchase/premium-membership', {
+        headers: { 'Authorization': localStorage.getItem('token') }
+    });
+    const options = {
+        key: response.data.key_id,              // Recognizes your company
+        order_id: response.data.order.id,        // Id for one time payment
+        handler: async (response) => {    // To handle the successful payment
+            const transactionResponse = await axios.post('http://localhost:3000/purchase/update-transaction-status', {
+                order_id: options.order_id,
+                payment_id: response.razorpay_payment_id
+            }, { headers: { 'Authorization': localStorage.getItem('token') } })
+            showNotification(transactionResponse.data.message + ' You are now a premium user.');
+            makePremium();
+        }
+    }
+    const razorpayInstance = new Razorpay(options);
+    razorpayInstance.open();
+    event.preventDefault();
+    razorpayInstance.on('payment.failed', (response) => {
+        console.log(response);
+        alert('Something went wrong. Please try again.');
+    });
+}
+
+function makePremium() {
+    buyPremiumBtn.style.display = "none";
+    const premiumUser = `<span id="premium-user">(Premium User)</span>`;
+    user.innerHTML += premiumUser;
+}

@@ -10,8 +10,10 @@ const app = express();
 const sequelize = require('./util/database');
 const userRoutes = require('./routes/userRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
+const purchaseRoutes = require('./routes/purchaseRoutes');
 const User = require('./models/user');
 const Expense = require('./models/expense');
+const Order = require('./models/order');
 
 // Using body-parser and cors for the app
 app.use(bodyParser.json());
@@ -20,10 +22,13 @@ app.use(cors());
 // Routes
 app.use('/user', userRoutes);
 app.use('/expenses', expenseRoutes);
+app.use('/purchase', purchaseRoutes);
 
 // Associations
 Expense.belongsTo(User);
 User.hasMany(Expense);
+Order.belongsTo(User);
+User.hasMany(Order);
 
 sequelize.sync()
     .then(app.listen(3000))

@@ -13,7 +13,10 @@
 
 <body>
     <main id="expense-page-main">
-        <h1>EXPENSES</h1>
+        <div class="premium-container">
+            <h1 id="user"><span id="user-name"></span>'s Expenses</h1>
+            <button id="buy-premium-btn" type="submit">Buy Premium</button>
+        </div>
         <div class="form-container">
             <form id="expense-form">
                 <label for="amount"></label>
@@ -36,6 +39,7 @@
     </main>
 </body>
 <script src="expenses.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
 
 </html>

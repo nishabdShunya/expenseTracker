@@ -6,6 +6,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^2.3.3",
+    "razorpay": "^2.8.4",
     "sequelize": "^6.27.0"
   },
   "devDependencies": {
