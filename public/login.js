@@ -65,6 +65,6 @@ async function resetPassword(event) {
         showNotification('Please enter your email.');
     } else {
         const response = await axios.post('http://localhost:3000/password/forgot-password', { email: loginEmail.value });
-        console.log(response);
+        showNotification(response.data.message);
     }
 }

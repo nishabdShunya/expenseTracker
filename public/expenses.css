@@ -7,7 +7,7 @@
 .premium-container {
     flex: 1;
     width: 100%;
-    padding: 1rem 2rem;
+    padding: 1rem 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -123,15 +123,14 @@
     font-size: 1.25rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: flex-start;
     overflow-y: scroll;
 }
 
 .expense-item {
-    width: 100%;
     padding: 1rem;
-    margin: 1rem 0;
+    margin: 1rem 0 1rem 1rem;
     border: none;
     background-color: rgb(35, 35, 35);
     display: flex;
@@ -171,9 +170,9 @@
 
 #expense-form input,
 #expense-form select {
-    width: 20%;
+    flex: 1;
     height: 4rem;
-    margin: 0;
+    margin: 0 1rem;
     padding: 0.5rem;
     color: white;
     background-color: rgb(44, 44, 44);
@@ -188,8 +187,21 @@
     cursor: pointer;
 }
 
-#expense-form button {
-    width: 20%;
+#add-expense-btn {
+    flex: 1;
+    border: 0.2rem solid white;
+    font-weight: bold;
+    color: white;
+    background-color: rgb(35, 35, 35);
+    padding: 1rem;
+    margin: 0 1rem;
+    height: 4rem;
+}
+
+#add-expense-btn:hover, #add-expense-btn:focus {
+    cursor: pointer;
+    background-color: rgb(82, 214, 150, 0.5);
+    outline: none;
 }
 
 input::-webkit-outer-spin-button,
