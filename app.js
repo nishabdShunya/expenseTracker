@@ -12,6 +12,7 @@ const userRoutes = require('./routes/userRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const premiumRoutes = require('./routes/premiumRoutes');
+const passwordRoutes = require('./routes/passwordRoutes');
 const User = require('./models/user');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
@@ -25,6 +26,7 @@ app.use('/user', userRoutes);
 app.use('/expenses', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
+app.use('/password', passwordRoutes);
 
 // Associations
 Expense.belongsTo(User);

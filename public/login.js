@@ -44,3 +44,27 @@ function showNotification(message) {
         document.body.removeChild(notificationDiv);
     }, 2500);
 }
+
+document.getElementById('forgot-password-btn').addEventListener('click', (event) => {
+    event.preventDefault();
+    document.getElementById('forgot-password-form-container').style.display = 'flex';
+});
+
+document.getElementById('reset-password-close-btn').addEventListener('click', (event) => {
+    event.preventDefault();
+    document.getElementById('forgot-password-form-container').style.display = 'none';
+});
+
+const resetPasswordBtn = document.getElementById('reset-password-btn');
+resetPasswordBtn.addEventListener('click', resetPassword);
+
+async function resetPassword(event) {
+    event.preventDefault();
+    const loginEmail = document.getElementById('login-email');
+    if (loginEmail.value === '') {
+        showNotification('Please enter your email.');
+    } else {
+        const response = await axios.post('http://localhost:3000/password/forgot-password', { email: loginEmail.value });
+        console.log(response);
+    }
+}

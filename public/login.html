@@ -23,7 +23,18 @@
                 <input type="email" name="email" id="email" placeholder="Email" required>
                 <label for="password"></label>
                 <input type="password" name="password" id="password" placeholder="Password" required>
+                <button id="forgot-password-btn">Forgot Password?</button>
                 <button id="login-btn" type="submit">LOG IN</button>
+            </form>
+        </div>
+        <div id="forgot-password-form-container">
+            <h1>RESET PASSWORD</h1>
+            <p>To reset your password, enter the email address you use to log in to the Expense Tracker.</p>
+            <button id="reset-password-close-btn">&times;</button>
+            <form id="forgot-password-form">
+                <label for="login-email"></label>
+                <input type="email" name="email" id="login-email" placeholder="Your Email Address">
+                <button id="reset-password-btn">Get Reset Link</button>
             </form>
         </div>
     </main>

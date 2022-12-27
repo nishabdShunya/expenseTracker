@@ -81,7 +81,7 @@ form {
     align-items: stretch;
 }
 
-form input{
+form input {
     margin-bottom: 2rem;
     padding: 0.5rem;
     height: 4rem;
@@ -103,7 +103,23 @@ input:-webkit-autofill {
     -webkit-text-fill-color: white !important;
 }
 
-form button {
+#forgot-password-btn {
+    color: rgb(82, 214, 150);
+    background-color: transparent;
+    align-self: flex-end;
+    border: none;
+    font-style: italic;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+#forgot-password-btn:hover {
+    cursor: pointer;
+}
+
+#login-btn,
+#signup-btn,
+#reset-password-btn {
     border: 0.2rem solid white;
     font-weight: bold;
     color: white;
@@ -114,12 +130,16 @@ form button {
     align-self: center;
 }
 
-form button:hover {
+#login-btn:hover,
+#signup-btn:hover,
+#reset-password-btn:hover {
     cursor: pointer;
     background-color: rgb(82, 214, 150, 0.5);
 }
 
-form button:focus {
+#login-btn:focus,
+#signup-btn:focus,
+#reset-password-btn:focus {
     outline: none;
     background-color: rgb(82, 214, 150, 0.5);
 }
@@ -136,6 +156,45 @@ form button:focus {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#forgot-password-form-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgb(44, 44, 44);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+}
+
+#forgot-password-form-container h1 {
+    font-size: 2rem;
+}
+
+#forgot-password-form {
+    background-color: rgb(35, 35, 35);
+    width: 50%;
+    height: 25%;
+    padding: 2rem;
+}
+
+#reset-password-close-btn {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background-color: transparent;
+    color: rgb(82, 214, 150);
+    border: none;
+    font-size: x-large;
+}
+
+#reset-password-close-btn:hover {
+    cursor: pointer;
 }
 
 /* RESPONSIVENESS */
