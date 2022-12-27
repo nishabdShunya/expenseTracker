@@ -97,28 +97,40 @@ async function order(event) {
         key: response.data.key_id,              // Recognizes your company
         order_id: response.data.order.id,        // Id for one time payment
         handler: async (response) => {    // To handle the successful payment
-            const transactionResponse = await axios.post('http://localhost:3000/purchase/update-transaction-status', {
-                order_id: options.order_id,
-                payment_id: response.razorpay_payment_id,
-                success: true
-            }, { headers: { 'Authorization': localStorage.getItem('token') } });
-            showNotification(transactionResponse.data.message + ' You are now a premium user.');
-            makePremium();
+            try {
+                const transactionResponse = await axios.post('http://localhost:3000/purchase/update-transaction-status', {
+                    order_id: options.order_id,
+                    payment_id: response.razorpay_payment_id,
+                    success: true
+                }, { headers: { 'Authorization': localStorage.getItem('token') } });
+                showNotification(transactionResponse.data.message + ' You are now a premium user.');
+                makePremium();
+            } catch (error) {
+                showNotification(error.response.data.message)
+            }
         }
     }
     const razorpayInstance = new Razorpay(options);
     razorpayInstance.open();
     razorpayInstance.on('payment.failed', async (response) => {
-        const transactionResponse = await axios.post('http://localhost:3000/purchase/update-transaction-status', {
-            order_id: response.error.metadata.order_id,
-            payment_id: response.error.metadata.payment_id,
-            success: false
-        }, { headers: { 'Authorization': localStorage.getItem('token') } });
-        razorpayInstance.close();
-        showNotification(transactionResponse.data.message + ' Please try again.');
-        setTimeout(() => {
-            window.location.href = './expenses.html';
-        }, 2500);
+        try {
+            const transactionResponse = await axios.post('http://localhost:3000/purchase/update-transaction-status', {
+                order_id: response.error.metadata.order_id,
+                payment_id: response.error.metadata.payment_id,
+                success: false
+            }, { headers: { 'Authorization': localStorage.getItem('token') } });
+            razorpayInstance.close();
+            showNotification(transactionResponse.data.message + ' Please try again.');
+            setTimeout(() => {
+                window.location.href = './expenses.html';
+            }, 2500);
+        } catch (error) {
+            razorpayInstance.close();
+            showNotification(error.response.data.message);
+            setTimeout(() => {
+                window.location.href = './expenses.html';
+            }, 2500);
+        }
     });
 }
 
@@ -126,27 +138,31 @@ function makePremium() {
     buyPremiumBtn.style.display = "none";
     const premiumUser = `<span id="premium-user">(Premium User)</span>`;
     user.innerHTML += premiumUser;
-    const leaderBoardBtn = `<button id="leaderboard-btn" onclick="showLeaderboard(event)">Show Leaderboard</button>`;
+    const leaderBoardBtn = `<button id="leaderboard-btn" onclick="showLeaderboard()">Show Leaderboard</button>`;
     const premiumContainer = document.getElementsByClassName('premium-container')[0];
     premiumContainer.innerHTML += leaderBoardBtn;
 }
 
-async function showLeaderboard(event) {
-    const response = await axios.get('http://localhost:3000/premium/show-leaderboard');
-    const leaderboard = response.data.leaderboard;
-    const leaderboardContainer = document.getElementById('leaderboard-container');
-    leaderboardContainer.style.display = 'flex';
-    const leaderboardList = document.getElementById('leaderboard-list');
-    leaderboardList.innerHTML = '';
-    for (let item of leaderboard) {
-        const listItem = `
+async function showLeaderboard() {
+    try {
+        const response = await axios.get('http://localhost:3000/premium/show-leaderboard');
+        const leaderboard = response.data.leaderboard;
+        const leaderboardContainer = document.getElementById('leaderboard-container');
+        leaderboardContainer.style.display = 'flex';
+        const leaderboardList = document.getElementById('leaderboard-list');
+        leaderboardList.innerHTML = '';
+        for (let item of leaderboard) {
+            const listItem = `
         <li class="list-item">
             <p class="list-item-name"><span>Username:</span> ${item.name}</p>
-            <p class="list-item-expense"><span>Total Expenses:</span> ${item.totalExpenses}</p>
+            <p class="list-item-expense"><span>Total Expenses:</span> &#x20B9; ${item.totalExpenses}</p>
         </li>`;
-        leaderboardList.innerHTML += listItem;
+            leaderboardList.innerHTML += listItem;
+        }
+        document.getElementById('leaderboard-close-btn').addEventListener('click', (event) => {
+            leaderboardContainer.style.display = 'none';
+        })
+    } catch (error) {
+        showNotification(error.response.data.message);
     }
-    document.getElementById('leaderboard-close-btn').addEventListener('click', (event) => {
-        leaderboardContainer.style.display = 'none';
-    })
 }

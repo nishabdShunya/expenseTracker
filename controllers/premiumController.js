@@ -1,24 +1,16 @@
 const Expense = require('../models/expense');
 const User = require('../models/user');
+const sequelize = require('../util/database');
 
 exports.getLeaderboard = async (req, res, next) => {
     try {
-        const expenses = await Expense.findAll();
-        const useridAndExpenses = {};
-        for (let expense of expenses) {
-            if (useridAndExpenses[expense.userId]) {
-                useridAndExpenses[expense.userId] += expense.amount;
-            } else {
-                useridAndExpenses[expense.userId] = expense.amount;
-            }
-        }
-        const users = await User.findAll();
-        const usernameAndExpenses = [];
-        for (let user of users) {
-            usernameAndExpenses.push({ name: user.name, totalExpenses: useridAndExpenses[user.id] });
-        }
-        usernameAndExpenses.sort((a, b) => b.totalExpenses - a.totalExpenses);
-        res.status(200).json({ success: true, leaderboard: usernameAndExpenses });
+        const leaderboard = await User.findAll({
+            attributes: ['id', 'name', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'totalExpenses']],
+            include: [{ model: Expense, attributes: [] }],
+            group: ['user.id'],
+            order: [['totalExpenses', 'DESC']]
+        });
+        res.status(200).json({ success: true, leaderboard: leaderboard });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Database operation failed. Please try again.' });
     }
