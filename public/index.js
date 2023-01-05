@@ -3,9 +3,11 @@ const description = document.getElementById('description');
 const category = document.getElementById('category');
 const addExpenseBtn = document.getElementById('add-expense-btn');
 const expenseList = document.getElementById('expense-list');
-const user = document.getElementById('user');
 const username = document.getElementById('user-name');
+const premiumUser = document.getElementById('premium-user');
 const buyPremiumBtn = document.getElementById('buy-premium-btn');
+const leaderboardBtn = document.getElementById('leaderboard-btn');
+const downloadFileBtn = document.getElementById('download-btn');
 
 window.addEventListener('DOMContentLoaded', (event) => {
     event.preventDefault();
@@ -122,26 +124,26 @@ async function order(event) {
             razorpayInstance.close();
             showNotification(transactionResponse.data.message + ' Please try again.');
             setTimeout(() => {
-                window.location.href = './expenses.html';
+                window.location.href = './index.html';
             }, 2500);
         } catch (error) {
             razorpayInstance.close();
             showNotification(error.response.data.message);
             setTimeout(() => {
-                window.location.href = './expenses.html';
+                window.location.href = './index.html';
             }, 2500);
         }
     });
 }
 
 function makePremium() {
-    buyPremiumBtn.style.display = "none";
-    const premiumUser = `<span id="premium-user">(Premium User)</span>`;
-    user.innerHTML += premiumUser;
-    const leaderBoardBtn = `<button id="leaderboard-btn" onclick="showLeaderboard()">Show Leaderboard</button>`;
-    const premiumContainer = document.getElementsByClassName('premium-container')[0];
-    premiumContainer.innerHTML += leaderBoardBtn;
+    premiumUser.style.display = 'inline';
+    buyPremiumBtn.style.display = 'none';
+    leaderboardBtn.style.display = 'flex';
+    document.getElementById('download-container').style.display = 'flex';
 }
+
+leaderboardBtn.addEventListener('click', showLeaderboard);
 
 async function showLeaderboard() {
     try {
@@ -162,6 +164,28 @@ async function showLeaderboard() {
         document.getElementById('leaderboard-close-btn').addEventListener('click', (event) => {
             leaderboardContainer.style.display = 'none';
         })
+    } catch (error) {
+        showNotification(error.response.data.message);
+    }
+}
+
+downloadFileBtn.addEventListener('click', downloadFile);
+
+async function downloadFile(event) {
+    event.preventDefault();
+    try {
+        const response = await axios.get('http://localhost:3000/expenses/download-expenses', {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        });
+        if (response.status === 200) {
+            showNotification('Your file is downloading.');
+            const a = document.createElement('a');
+            a.href = response.data.fileURL;
+            a.download = 'myexpense.csv';
+            a.click();
+        } else {
+            showNotification('Something went wrong. Please try again.');
+        }
     } catch (error) {
         showNotification(error.response.data.message);
     }

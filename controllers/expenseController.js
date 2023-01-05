@@ -1,4 +1,5 @@
 const Expense = require("../models/expense");
+const S3Services = require('../services/S3Services');
 
 exports.postAddExpense = async (req, res, next) => {
     try {
@@ -30,6 +31,17 @@ exports.deleteExpense = async (req, res, next) => {
         await Expense.destroy({ where: { id: req.params.expenseId } });
         res.status(200).json({ success: true, message: 'Expense deleted successfully.' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Database operation failed. Please try again.' })
+        res.status(500).json({ success: false, message: 'Database operation failed. Please try again.' });
+    }
+}
+
+exports.downloadExpenses = async (req, res, next) => {
+    try {
+        const expenses = await req.user.getExpenses();
+        const filename = `Expenses${req.user.id}/${new Date()}.txt`;
+        const fileURL = await S3Services.s3Upload(filename, JSON.stringify(expenses));
+        res.status(200).json({ success: true, fileURL: fileURL });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Database operation failed. Please try again.' });
     }
 }

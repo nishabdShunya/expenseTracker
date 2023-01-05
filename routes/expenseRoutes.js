@@ -12,4 +12,6 @@ router.delete('/:expenseId', authorizationMiddleware.authentication, expenseCont
 
 router.post('/add-expense', authorizationMiddleware.authentication, expenseController.postAddExpense);
 
+router.get('/download-expenses', authorizationMiddleware.authentication, expenseController.downloadExpenses);
+
 module.exports = router;

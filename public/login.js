@@ -19,7 +19,7 @@ async function loginUser(event) {
                 localStorage.setItem('token', response.data.token);
                 showNotification(response.data.message);
                 setTimeout(() => {
-                    window.location.href = './expenses.html';
+                    window.location.href = './index.html';
                 }, 2500);
             } else if (response.status === 401) {
                 showNotification(response.data.message);

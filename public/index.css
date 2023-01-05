@@ -14,9 +14,16 @@
     border-bottom: 1px solid rgb(82, 214, 150);
 }
 
+.premium-container h1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 #premium-user {
     padding-left: 1rem;
     font-size: 1rem;
+    display: none;
 }
 
 #buy-premium-btn,
@@ -26,6 +33,10 @@
     font-size: 1.25rem;
     padding: 1rem;
     border: none;
+}
+
+#leaderboard-btn{
+    display: none;
 }
 
 #leaderboard-close-btn {
@@ -41,6 +52,9 @@
 
 #download-container{
     padding: 2rem;
+    display: none;
+    justify-content: center;
+    align-items: center;
 }
 
 #buy-premium-btn:hover,
