@@ -14,4 +14,6 @@ router.post('/add-expense', authorizationMiddleware.authentication, expenseContr
 
 router.get('/download-expenses', authorizationMiddleware.authentication, expenseController.downloadExpenses);
 
+router.get('/download-history', authorizationMiddleware.authentication, expenseController.getDownloadHistory);
+
 module.exports = router;

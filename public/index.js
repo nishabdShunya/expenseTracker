@@ -8,6 +8,7 @@ const premiumUser = document.getElementById('premium-user');
 const buyPremiumBtn = document.getElementById('buy-premium-btn');
 const leaderboardBtn = document.getElementById('leaderboard-btn');
 const downloadFileBtn = document.getElementById('download-btn');
+const downloadHistoryBtn = document.getElementById('download-history-btn');
 
 window.addEventListener('DOMContentLoaded', (event) => {
     event.preventDefault();
@@ -186,6 +187,31 @@ async function downloadFile(event) {
         } else {
             showNotification('Something went wrong. Please try again.');
         }
+    } catch (error) {
+        showNotification(error.response.data.message);
+    }
+}
+
+downloadHistoryBtn.addEventListener('click', showDownloadHistory);
+
+async function showDownloadHistory(event) {
+    event.preventDefault();
+    try {
+        const response = await axios.get('http://localhost:3000/expenses/download-history', {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        });
+        const filesDownloaded = response.data.filesDownloaded;
+        const downloadHistoryContainer = document.getElementById('download-history-container');
+        downloadHistoryContainer.style.display = 'flex';
+        const downloadHistoryList = document.getElementById('download-history-list');
+        downloadHistoryList.innerHTML = '';
+        for (let fileDownloaded of filesDownloaded) {
+            const file = `<li class="file">${fileDownloaded.fileURL}</li>`;
+            downloadHistoryList.innerHTML += file;
+        }
+        document.getElementById('download-history-close-btn').addEventListener('click', (event) => {
+            downloadHistoryContainer.style.display = 'none';
+        })
     } catch (error) {
         showNotification(error.response.data.message);
     }
