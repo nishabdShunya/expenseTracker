@@ -1,5 +1,4 @@
 const Expense = require("../models/expense");
-const FileDownloaded = require('../models/fileDownloaded');
 const S3Services = require('../services/S3Services');
 
 exports.postAddExpense = async (req, res, next) => {
@@ -9,7 +8,11 @@ exports.postAddExpense = async (req, res, next) => {
             description: req.body.description,
             category: req.body.category
         });
-        res.status(201).json({ success: true, message: 'Expense added successfully.' });
+        const expenses = await req.user.getExpenses();
+        const totalExpenses = expenses.length;
+        const EXPENSES_PER_PAGE = 5;
+        const lastPage = Math.ceil(totalExpenses / EXPENSES_PER_PAGE);
+        res.status(201).json({ success: true, message: 'Expense added successfully.', lastPage: lastPage });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Database operation failed. Please try again.' })
     }
@@ -17,8 +20,27 @@ exports.postAddExpense = async (req, res, next) => {
 
 exports.getExpenses = async (req, res, next) => {
     try {
+        const page = +req.query.page || 1;
         const expenses = await req.user.getExpenses();
-        res.status(200).json({ success: true, expenses: expenses, user: req.user });
+        const totalExpenses = expenses.length;
+        const EXPENSES_PER_PAGE = 5;
+        const pageExpenses = await req.user.getExpenses({
+            offset: (page - 1) * EXPENSES_PER_PAGE,
+            limit: EXPENSES_PER_PAGE
+        });
+        res.status(200).json({
+            success: true,
+            user: req.user,
+            pageExpenses: pageExpenses,
+            paginationInfo: {
+                currentPage: page,
+                hasNextPage: page * EXPENSES_PER_PAGE < totalExpenses,
+                nextPage: page + 1,
+                hasPreviousPage: page > 1,
+                previousPage: page - 1,
+                lastPage: Math.ceil(totalExpenses / EXPENSES_PER_PAGE)
+            }
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Database operation failed. Please try again.' });
     }

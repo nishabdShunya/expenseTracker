@@ -9,11 +9,73 @@ const buyPremiumBtn = document.getElementById('buy-premium-btn');
 const leaderboardBtn = document.getElementById('leaderboard-btn');
 const downloadFileBtn = document.getElementById('download-btn');
 const downloadHistoryBtn = document.getElementById('download-history-btn');
+const paginationContainer = document.getElementById('pagination-container');
 
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener('DOMContentLoaded', async (event) => {
     event.preventDefault();
-    showExpenses();
+    try {
+        let page = 1;
+        const response = await axios.get(`http://localhost:3000/expenses?page=${page}`, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        });
+        username.innerText = response.data.user.name;
+        if (response.data.user.isPremiumUser) {
+            makePremium();
+        }
+        showExpenses(response.data.pageExpenses, response.data.paginationInfo.currentPage);
+        showPagination(response.data.paginationInfo);
+    } catch (error) {
+        showNotification(error.response.data.message);
+    }
 });
+
+function showExpenses(expenses, currentPage) {
+    expenseList.innerHTML = '';
+    for (let expense of expenses) {
+        const expenseItem = `
+            <li class="expense-item">
+                &#x20B9; ${expense.amount} spent on ${expense.category} (${expense.description}).
+                <button class="del-btns" onclick = "deleteExpenseItem(${expense.id}, ${currentPage})">DELETE</button>
+            </li>`;
+        expenseList.innerHTML += expenseItem;
+    }
+};
+
+function showPagination(paginationInfo) {
+    paginationContainer.innerHTML = '';
+    if (paginationInfo.currentPage !== 1 && paginationInfo.previousPage !== 1) {
+        const firstPageBtn = `<button class="pagination-btn" onclick="loadPage(${1})">${1}</button>`;
+        paginationContainer.innerHTML += firstPageBtn;
+        paginationContainer.innerHTML += `<p>.......</p>`;
+    }
+    if (paginationInfo.hasPreviousPage) {
+        const previousPageBtn = `<button class="pagination-btn" onclick="loadPage(${paginationInfo.previousPage})">${paginationInfo.previousPage}</button>`;
+        paginationContainer.innerHTML += previousPageBtn;
+    }
+    const currentPageBtn = `<button class="pagination-btn active" onclick="loadPage(${paginationInfo.currentPage})">${paginationInfo.currentPage}</button>`;
+    paginationContainer.innerHTML += currentPageBtn;
+    if (paginationInfo.hasNextPage) {
+        const nextPageBtn = `<button class="pagination-btn" onclick="loadPage(${paginationInfo.nextPage})">${paginationInfo.nextPage}</button>`;
+        paginationContainer.innerHTML += nextPageBtn;
+    }
+    if (paginationInfo.currentPage !== paginationInfo.lastPage && paginationInfo.nextPage !== paginationInfo.lastPage) {
+        paginationContainer.innerHTML += `<p>.......</p>`;
+        const lastPageBtn = `<button class="pagination-btn" onclick="loadPage(${paginationInfo.lastPage})">${paginationInfo.lastPage}</button>`;
+        paginationContainer.innerHTML += lastPageBtn;
+    }
+}
+
+async function loadPage(page) {
+    try {
+        const response = await axios.get(`http://localhost:3000/expenses?page=${page}`, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        });
+        showExpenses(response.data.pageExpenses, response.data.paginationInfo.currentPage);
+        showPagination(response.data.paginationInfo);
+    } catch (error) {
+        showNotification(error.response.data.message);
+    }
+}
 
 addExpenseBtn.addEventListener('click', addExpense);
 
@@ -33,7 +95,7 @@ async function addExpense(event) {
                 headers: { 'Authorization': localStorage.getItem('token') }
             });
             showNotification(response.data.message);
-            showExpenses();
+            loadPage(response.data.lastPage);
         } catch (error) {
             showNotification(error);
         }
@@ -54,37 +116,13 @@ function showNotification(message) {
     }, 2500);
 };
 
-async function showExpenses() {
-    expenseList.innerHTML = '';
-    try {
-        const response = await axios.get('http://localhost:3000/expenses', {
-            headers: { 'Authorization': localStorage.getItem('token') }
-        });
-        username.innerText = response.data.user.name;
-        if (response.data.user.isPremiumUser) {
-            makePremium();
-        }
-        const expenses = response.data.expenses;
-        for (let expense of expenses) {
-            const expenseItem = `
-            <li class="expense-item">
-                &#x20B9; ${expense.amount} spent on ${expense.category} (${expense.description}).
-                <button class="del-btns" onClick = "deleteExpenseItem('${expense.id}')">DELETE</button>
-            </li>`;
-            expenseList.innerHTML += expenseItem;
-        }
-    } catch (error) {
-        showNotification(error.response.data.message);
-    }
-};
-
-async function deleteExpenseItem(expenseId) {
+async function deleteExpenseItem(expenseId, currentPage) {
     try {
         const response = await axios.delete('http://localhost:3000/expenses/' + expenseId, {
             headers: { 'Authorization': localStorage.getItem('token') }
         });
         showNotification(response.data.message);
-        showExpenses();
+        loadPage(currentPage);
     } catch (error) {
         showNotification(error);
     }
