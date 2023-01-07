@@ -1,7 +1,13 @@
+// Importing node core modules
+const path = require('path');
+const fs = require('fs');
+
 // Importing third-party packages
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
 
 // Invoking the app
 const app = express();
@@ -21,9 +27,12 @@ const Order = require('./models/order');
 const ForgotPassword = require('./models/forgotPassword');
 const FileDownloaded = require('./models/fileDownloaded');
 
-// Using body-parser and cors for the app
+// Using third-party packages
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(bodyParser.json());
 app.use(cors());
+app.use(helmet());
+app.use(morgan('combined', { stream: accessLogStream }));
 
 // Routes
 app.use('/user', userRoutes);
@@ -43,5 +52,5 @@ FileDownloaded.belongsTo(User);
 User.hasMany(FileDownloaded);
 
 sequelize.sync()
-    .then(app.listen(3000))
+    .then(app.listen(process.env.PORT || 3000))
     .catch(err => console.log(err));

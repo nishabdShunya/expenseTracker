@@ -1,0 +1,8 @@
+::1 - - [07/Jan/2023:19:22:19 +0000] "POST /user/login HTTP/1.1" 201 183 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76"
+::1 - - [07/Jan/2023:19:22:22 +0000] "GET /expenses?page=1 HTTP/1.1" 200 1201 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76"
+::1 - - [07/Jan/2023:19:22:46 +0000] "GET /expenses?page=1 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76"
+::1 - - [07/Jan/2023:19:22:53 +0000] "GET /expenses?page=2 HTTP/1.1" 200 1240 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76"
+::1 - - [07/Jan/2023:19:22:59 +0000] "GET /expenses?page=3 HTTP/1.1" 200 1224 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76"
+::1 - - [07/Jan/2023:19:23:12 +0000] "GET /expenses?page=1 HTTP/1.1" 200 2062 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76"
+::1 - - [07/Jan/2023:19:23:26 +0000] "GET /expenses/download-history HTTP/1.1" 200 1596 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76"
+::1 - - [07/Jan/2023:19:23:36 +0000] "GET /premium/show-leaderboard HTTP/1.1" 200 228 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76"
