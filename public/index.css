@@ -224,8 +224,10 @@
     outline: none;
 }
 
-#expense-form select:hover {
+#expense-form select:hover,
+#expense-form select:focus {
     cursor: pointer;
+    outline: none;
 }
 
 #add-expense-btn {
@@ -245,13 +247,34 @@
     outline: none;
 }
 
-#pagination-container {
+#pagination-container,
+#expenses-per-page-container {
     background-color: rgb(35, 35, 35);
     width: 100%;
-    padding-top: 1rem;
+    padding: 1rem 0 0 0;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#expenses-per-page-container {
+    padding: 0 0 1rem 0;
+    font-size: 1.25rem;
+}
+
+#no-of-expenses-per-page {
+    height: 2.25rem;
+    margin: 0 1rem;
+    padding: 0.5rem;
+    color: white;
+    background-color: rgb(44, 44, 44);
+    border: none;
+}
+
+#no-of-expenses-per-page:hover,
+#no-of-expenses-per-page:focus {
+    cursor: pointer;
+    outline: none;
 }
 
 #pagination-container p {

@@ -10,32 +10,38 @@ const leaderboardBtn = document.getElementById('leaderboard-btn');
 const downloadFileBtn = document.getElementById('download-btn');
 const downloadHistoryBtn = document.getElementById('download-history-btn');
 const paginationContainer = document.getElementById('pagination-container');
+const expensesPerPage = document.getElementById('no-of-expenses-per-page');
 
 window.addEventListener('DOMContentLoaded', async (event) => {
     event.preventDefault();
     try {
+        localStorage.setItem('expenseNum', expensesPerPage.value);
         let page = 1;
         const response = await axios.get(`http://localhost:3000/expenses?page=${page}`, {
-            headers: { 'Authorization': localStorage.getItem('token') }
+            headers: {
+                'Authorization': localStorage.getItem('token'),
+                'ExpensesPerPage': localStorage.getItem('expenseNum')
+            }
         });
         username.innerText = response.data.user.name;
         if (response.data.user.isPremiumUser) {
             makePremium();
         }
-        showExpenses(response.data.pageExpenses, response.data.paginationInfo.currentPage);
+        showExpenses(response.data.pageExpenses);
         showPagination(response.data.paginationInfo);
+        localStorage.setItem('currentPage', response.data.paginationInfo.currentPage);
     } catch (error) {
         showNotification(error.response.data.message);
     }
 });
 
-function showExpenses(expenses, currentPage) {
+function showExpenses(expenses) {
     expenseList.innerHTML = '';
     for (let expense of expenses) {
         const expenseItem = `
             <li class="expense-item">
                 &#x20B9; ${expense.amount} spent on ${expense.category} (${expense.description}).
-                <button class="del-btns" onclick = "deleteExpenseItem(${expense.id}, ${currentPage})">DELETE</button>
+                <button class="del-btns" onclick = "deleteExpenseItem(${expense.id})">DELETE</button>
             </li>`;
         expenseList.innerHTML += expenseItem;
     }
@@ -68,10 +74,14 @@ function showPagination(paginationInfo) {
 async function loadPage(page) {
     try {
         const response = await axios.get(`http://localhost:3000/expenses?page=${page}`, {
-            headers: { 'Authorization': localStorage.getItem('token') }
+            headers: {
+                'Authorization': localStorage.getItem('token'),
+                'ExpensesPerPage': localStorage.getItem('expenseNum')
+            }
         });
-        showExpenses(response.data.pageExpenses, response.data.paginationInfo.currentPage);
+        showExpenses(response.data.pageExpenses);
         showPagination(response.data.paginationInfo);
+        localStorage.setItem('currentPage', response.data.paginationInfo.currentPage);
     } catch (error) {
         showNotification(error.response.data.message);
     }
@@ -92,7 +102,10 @@ async function addExpense(event) {
         }
         try {
             const response = await axios.post('http://localhost:3000/expenses/add-expense', expenseDetails, {
-                headers: { 'Authorization': localStorage.getItem('token') }
+                headers: {
+                    'Authorization': localStorage.getItem('token'),
+                    'ExpensesPerPage': localStorage.getItem('expenseNum')
+                }
             });
             showNotification(response.data.message);
             loadPage(response.data.lastPage);
@@ -116,13 +129,13 @@ function showNotification(message) {
     }, 2500);
 };
 
-async function deleteExpenseItem(expenseId, currentPage) {
+async function deleteExpenseItem(expenseId) {
     try {
         const response = await axios.delete('http://localhost:3000/expenses/' + expenseId, {
             headers: { 'Authorization': localStorage.getItem('token') }
         });
         showNotification(response.data.message);
-        loadPage(currentPage);
+        loadPage(localStorage.getItem('currentPage'));
     } catch (error) {
         showNotification(error);
     }
@@ -244,7 +257,7 @@ async function showDownloadHistory(event) {
         const downloadHistoryList = document.getElementById('download-history-list');
         downloadHistoryList.innerHTML = '';
         for (let fileDownloaded of filesDownloaded) {
-            const file = `<li class="file">${fileDownloaded.fileURL}</li>`;
+            const file = `<li class="file"><a href="${fileDownloaded.fileURL}" target="_blank">${fileDownloaded.createdAt}</a></li>`;
             downloadHistoryList.innerHTML += file;
         }
         document.getElementById('download-history-close-btn').addEventListener('click', (event) => {
@@ -254,3 +267,9 @@ async function showDownloadHistory(event) {
         showNotification(error.response.data.message);
     }
 }
+
+expensesPerPage.addEventListener('change', (event) => {
+    event.preventDefault();
+    localStorage.setItem('expenseNum', expensesPerPage.value);
+    loadPage(1);
+});

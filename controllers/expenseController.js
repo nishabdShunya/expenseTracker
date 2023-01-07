@@ -10,7 +10,7 @@ exports.postAddExpense = async (req, res, next) => {
         });
         const expenses = await req.user.getExpenses();
         const totalExpenses = expenses.length;
-        const EXPENSES_PER_PAGE = 5;
+        const EXPENSES_PER_PAGE = +req.headers.expensesperpage;
         const lastPage = Math.ceil(totalExpenses / EXPENSES_PER_PAGE);
         res.status(201).json({ success: true, message: 'Expense added successfully.', lastPage: lastPage });
     } catch (error) {
@@ -23,7 +23,7 @@ exports.getExpenses = async (req, res, next) => {
         const page = +req.query.page || 1;
         const expenses = await req.user.getExpenses();
         const totalExpenses = expenses.length;
-        const EXPENSES_PER_PAGE = 5;
+        const EXPENSES_PER_PAGE = +req.headers.expensesperpage;
         const pageExpenses = await req.user.getExpenses({
             offset: (page - 1) * EXPENSES_PER_PAGE,
             limit: EXPENSES_PER_PAGE

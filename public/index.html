@@ -36,6 +36,15 @@
                 <button id="add-expense-btn" type="submit">ADD EXPENSE</button>
             </form>
         </div>
+        <div id="expenses-per-page-container">
+            <label for="no-of-expenses-per-page">Show Expenses Per Page :</label>
+            <select id="no-of-expenses-per-page" required>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
         <ul id="expense-list"></ul>
         <div id="pagination-container"></div>
         <div id="download-container">
