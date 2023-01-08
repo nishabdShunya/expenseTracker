@@ -53,7 +53,7 @@
 
 #download-container {
     width: 100%;
-    padding: 2rem 3rem;
+    padding: 1rem 3rem 2rem 3rem;
     display: none;
     justify-content: space-between;
     align-items: center;
@@ -221,13 +221,13 @@
 }
 
 #expense-form input:focus {
-    outline: none;
+    outline: 0.1rem solid rgb(82, 214, 150);
 }
 
 #expense-form select:hover,
 #expense-form select:focus {
     cursor: pointer;
-    outline: none;
+    outline: 0.1rem solid rgb(82, 214, 150);
 }
 
 #add-expense-btn {
@@ -257,6 +257,10 @@
     align-items: center;
 }
 
+#pagination-container{
+    padding: 1rem 0;
+}
+
 #expenses-per-page-container {
     padding: 0 0 1rem 0;
     font-size: 1.25rem;
@@ -274,7 +278,7 @@
 #no-of-expenses-per-page:hover,
 #no-of-expenses-per-page:focus {
     cursor: pointer;
-    outline: none;
+    outline: 0.1rem solid rgb(82, 214, 150);
 }
 
 #pagination-container p {

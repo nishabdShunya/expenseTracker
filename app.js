@@ -6,7 +6,7 @@ const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const morgan = require('morgan');
 
 // Invoking the app
@@ -31,7 +31,7 @@ const FileDownloaded = require('./models/fileDownloaded');
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(bodyParser.json());
 app.use(cors());
-app.use(helmet());
+// app.use(helmet());
 app.use(morgan('combined', { stream: accessLogStream }));
 
 // Routes
@@ -40,6 +40,11 @@ app.use('/expenses', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
 app.use('/password', resetPasswordRoutes);
+
+// Deploying Frontend to AWS
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, `public/${req.url}`));
+});
 
 // Associations
 Expense.belongsTo(User);

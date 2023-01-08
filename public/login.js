@@ -14,7 +14,7 @@ async function loginUser(event) {
             password: password.value
         }
         try {
-            const response = await axios.post('http://localhost:3000/user/login', loginDetails);
+            const response = await axios.post('http://54.238.209.110:3000/user/login', loginDetails);
             if (response.status === 201) {
                 localStorage.setItem('token', response.data.token);
                 showNotification(response.data.message);
@@ -64,7 +64,7 @@ async function resetPassword(event) {
     if (loginEmail.value === '') {
         showNotification('Please enter your email.');
     } else {
-        const response = await axios.post('http://localhost:3000/password/forgot-password', { email: loginEmail.value });
+        const response = await axios.post('http://54.238.209.110:3000/password/forgot-password', { email: loginEmail.value });
         showNotification(response.data.message);
     }
 }

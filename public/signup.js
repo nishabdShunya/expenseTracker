@@ -16,7 +16,7 @@ async function addUser(event) {
             password: password.value
         }
         try {
-            const response = await axios.post('http://localhost:3000/user/signup', user);
+            const response = await axios.post('http://54.238.209.110:3000/user/signup', user);
             if (response.status === 201) {
                 showNotification(response.data.message);
                 setTimeout(() => {

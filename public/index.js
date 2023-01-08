@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     try {
         localStorage.setItem('expenseNum', expensesPerPage.value);
         let page = 1;
-        const response = await axios.get(`http://localhost:3000/expenses?page=${page}`, {
+        const response = await axios.get(`http://54.238.209.110:3000/expenses?page=${page}`, {
             headers: {
                 'Authorization': localStorage.getItem('token'),
                 'ExpensesPerPage': localStorage.getItem('expenseNum')
@@ -64,7 +64,7 @@ function showPagination(paginationInfo) {
         const nextPageBtn = `<button class="pagination-btn" onclick="loadPage(${paginationInfo.nextPage})">${paginationInfo.nextPage}</button>`;
         paginationContainer.innerHTML += nextPageBtn;
     }
-    if (paginationInfo.currentPage !== paginationInfo.lastPage && paginationInfo.nextPage !== paginationInfo.lastPage) {
+    if (paginationInfo.currentPage !== paginationInfo.lastPage && paginationInfo.nextPage !== paginationInfo.lastPage && paginationInfo.lastPage !== 0) {
         paginationContainer.innerHTML += `<p>.......</p>`;
         const lastPageBtn = `<button class="pagination-btn" onclick="loadPage(${paginationInfo.lastPage})">${paginationInfo.lastPage}</button>`;
         paginationContainer.innerHTML += lastPageBtn;
@@ -73,7 +73,7 @@ function showPagination(paginationInfo) {
 
 async function loadPage(page) {
     try {
-        const response = await axios.get(`http://localhost:3000/expenses?page=${page}`, {
+        const response = await axios.get(`http://54.238.209.110:3000/expenses?page=${page}`, {
             headers: {
                 'Authorization': localStorage.getItem('token'),
                 'ExpensesPerPage': localStorage.getItem('expenseNum')
@@ -101,7 +101,7 @@ async function addExpense(event) {
             category: category.value
         }
         try {
-            const response = await axios.post('http://localhost:3000/expenses/add-expense', expenseDetails, {
+            const response = await axios.post('http://54.238.209.110:3000/expenses/add-expense', expenseDetails, {
                 headers: {
                     'Authorization': localStorage.getItem('token'),
                     'ExpensesPerPage': localStorage.getItem('expenseNum')
@@ -131,7 +131,7 @@ function showNotification(message) {
 
 async function deleteExpenseItem(expenseId) {
     try {
-        const response = await axios.delete('http://localhost:3000/expenses/' + expenseId, {
+        const response = await axios.delete('http://54.238.209.110:3000/expenses/' + expenseId, {
             headers: { 'Authorization': localStorage.getItem('token') }
         });
         showNotification(response.data.message);
@@ -144,7 +144,7 @@ async function deleteExpenseItem(expenseId) {
 buyPremiumBtn.addEventListener('click', order);
 
 async function order(event) {
-    const response = await axios.get('http://localhost:3000/purchase/premium-membership', {
+    const response = await axios.get('http://54.238.209.110:3000/purchase/premium-membership', {
         headers: { 'Authorization': localStorage.getItem('token') }
     });
     const options = {
@@ -152,7 +152,7 @@ async function order(event) {
         order_id: response.data.order.id,        // Id for one time payment
         handler: async (response) => {    // To handle the successful payment
             try {
-                const transactionResponse = await axios.post('http://localhost:3000/purchase/update-transaction-status', {
+                const transactionResponse = await axios.post('http://54.238.209.110:3000/purchase/update-transaction-status', {
                     order_id: options.order_id,
                     payment_id: response.razorpay_payment_id,
                     success: true
@@ -168,7 +168,7 @@ async function order(event) {
     razorpayInstance.open();
     razorpayInstance.on('payment.failed', async (response) => {
         try {
-            const transactionResponse = await axios.post('http://localhost:3000/purchase/update-transaction-status', {
+            const transactionResponse = await axios.post('http://54.238.209.110:3000/purchase/update-transaction-status', {
                 order_id: response.error.metadata.order_id,
                 payment_id: response.error.metadata.payment_id,
                 success: false
@@ -199,7 +199,7 @@ leaderboardBtn.addEventListener('click', showLeaderboard);
 
 async function showLeaderboard() {
     try {
-        const response = await axios.get('http://localhost:3000/premium/show-leaderboard');
+        const response = await axios.get('http://54.238.209.110:3000/premium/show-leaderboard');
         const leaderboard = response.data.leaderboard;
         const leaderboardContainer = document.getElementById('leaderboard-container');
         leaderboardContainer.style.display = 'flex';
@@ -226,7 +226,7 @@ downloadFileBtn.addEventListener('click', downloadFile);
 async function downloadFile(event) {
     event.preventDefault();
     try {
-        const response = await axios.get('http://localhost:3000/expenses/download-expenses', {
+        const response = await axios.get('http://54.238.209.110:3000/expenses/download-expenses', {
             headers: { 'Authorization': localStorage.getItem('token') }
         });
         if (response.status === 200) {
@@ -248,7 +248,7 @@ downloadHistoryBtn.addEventListener('click', showDownloadHistory);
 async function showDownloadHistory(event) {
     event.preventDefault();
     try {
-        const response = await axios.get('http://localhost:3000/expenses/download-history', {
+        const response = await axios.get('http://54.238.209.110:3000/expenses/download-history', {
             headers: { 'Authorization': localStorage.getItem('token') }
         });
         const filesDownloaded = response.data.filesDownloaded;

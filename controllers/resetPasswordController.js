@@ -20,7 +20,7 @@ exports.postForgotPassword = async (req, res, next) => {
                 text: 'and easy to do anywhere, even with Node.js',
                 html: `
                 <h2>Click on the link below to reset your password</h2>
-                <a href="http://localhost:3000/password/reset-password/${id}">Reset password</a>`
+                <a href="http://54.238.209.110:3000/password/reset-password/${id}">Reset password</a>`
             };
             const result = await sgMail.send(msg);
             res.status(result[0].statusCode).json({ success: true, message: 'Link to reset password sent to your email.' });
@@ -153,7 +153,7 @@ exports.getResetPassword = async (req, res, next) => {
                         document.getElementById('reset-btn').addEventListener('click', async (event) => {
                             event.preventDefault();
                             const newPassword = document.getElementById('new-password').value;
-                            const response = await axios.get('http://localhost:3000/password/update-password/${id}?new-password=' + newPassword);
+                            const response = await axios.get('http://54.238.209.110:3000/password/update-password/${id}?new-password=' + newPassword);
                             const notificationDiv = document.createElement('div');
                             notificationDiv.classList.add('notification');
                             notificationDiv.innerHTML = response.data.message;
