@@ -43,6 +43,7 @@ app.use('/password', resetPasswordRoutes);
 
 // Deploying Frontend to AWS
 app.use((req, res, next) => {
+    console.log('Testing CICD Pipelines using Jenkins');
     res.sendFile(path.join(__dirname, `public/${req.url}`));
 });
 
